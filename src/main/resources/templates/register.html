@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>注册</title>
+</head>
+<body>
+        用户名:<input id="account">
+        密码:<input type="password" id="password">
+
+        <button id="but">注册</button>
+</body>
+<script src="/js/jquery.min1.js"></script>
+<script>
+    $("#but").click(function () {
+        $.ajax({
+            url:"insertAccount",
+            type:"post",
+            data:{
+                account:$("#account").val(),
+                password:$("#password").val(),
+            },
+            success:function (data) {
+                if (data == "注册成功,请前往登录！"){
+                        alert(data),
+                        location.href = "/index";
+                }else {
+                    alert(data);
+                }
+            }
+        })
+    })
+</script>
+</html>

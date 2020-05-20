@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>欢迎登录</title>
+</head>
+<style>
+    .text{
+        position:absolute;
+        left:450px;
+        top:200px;
+    }
+    #ton {
+        position:absolute;
+        left:550px;
+        top:300px;
+    }
+
+    #but {
+        position:absolute;
+        left:750px;
+        top:300px;
+    }
+</style>
+<body>
+    <div class="text">
+        用户名:<input id="account">
+        密码:<input type="password" id="password">
+    </div>
+    <div class="button">
+        <button id="ton">登录</button>
+        <button id="but">注册</button>
+    </div>
+</body>
+<script src="/js/jquery.min1.js"></script>
+<script>
+    $("#ton").click(function () {
+        $.ajax({
+            url:"getAccount",
+            type:"post",
+            data:{
+                account:$("#account").val(),
+                password:$("#password").val(),
+            },
+            success:function (data) {
+                if (data == "登录成功！") {
+                    alert(data),
+                        location.href = "/home";
+                }else {
+                    alert(data);
+                }
+            }
+        })
+    })
+
+    $("#but").click(function () {
+        location.href = "/register";
+    })
+</script>
+</html>

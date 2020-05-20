@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.AccountMapper">
+    <resultMap id="accountMap" type="com.example.demo.entity.Account">
+        <id property="id" column="id"/>
+        <result property="account" column="account"/>
+        <result property="password" column="password"/>
+    </resultMap>
+
+    <!--  根据账号密码查询是否已注册  -->
+    <select id="getAccount" resultType="java.lang.Integer">
+        select count(*) from account where account=#{account} and password=#{password}
+    </select>
+
+    <!--  注册账号密码  -->
+    <insert id="insertAccount">
+        insert into `account`(`account`,password)
+        values (#{account},#{password})
+    </insert>
+
+    <!--  删除账号密码  -->
+    <delete id="delAccount">
+        delete FROM account where id = #{id}
+    </delete>
+    <!--  修改账号密码  -->
+    <update id="updateAccount">
+        UPDATE account
+        <set>
+            <if test="account !=null and account != ''">
+                account = #{account}
+            </if>
+
+            <if test="password !=null and password != ''">
+                password = #{password}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

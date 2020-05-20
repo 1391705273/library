@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>书籍库</title>
+    <style>
+        #tbody{
+            position:absolute;
+            left:385px;
+            top:150px;
+        }
+
+        #back{
+            position:absolute;
+            left:385px;
+            top:128px;
+        }
+
+        #insertLibrary{
+            position:absolute;
+            left:200px;
+            top:45px;
+        }
+
+        #logout{
+            position:absolute;
+            left:1100px;
+        }
+    </style>
+</head>
+<button id="back">返回</button>
+<button id="logout">注销</button>
+<body>
+    <div id="tbody">
+        <button id="but">新增书籍</button>
+        <table id="table" border="1">
+            <thead>
+                <tr>
+                    <th data-field="bookName" id="bookName">书籍名称</th>
+                    <th data-field="bookAuthor" id="bookAuthor">书籍作者</th>
+                    <th data-field="publisher" id="publisher">书籍出版社</th>
+                    <th data-field="bookPrice" id="bookPrice">书籍名称</th>
+                    <th data-field="lendingTime" id="lendingTime">上次借书时间</th>
+                    <th data-field="returnTime" id="returnTime">上次归还时间</th>
+                    <th data-field="state" id="state">书籍状态</th>
+                    <th data-field="id" id="id">操作</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</body>
+
+<div id="insertLibrary" style="display: none;">
+    书籍名称:<input id="insertBookName" type="text">
+    书籍作者:<input id="insertBookAuthor" type="text">
+    书籍出版社:<input id="insertPublisher" type="text">
+    书籍价钱:<input id="insertBookPrice" type="number" min="0.00">
+    上次借书时间:<input id="insertLendingTime" type="date">
+    上次还书时间:<input id="insertReturnTime" type="date">
+    书籍状态:<select id="insertState">
+                <option>已借出</option>
+                <option>可借出</option>
+            </select>
+    <button type="submit" id="ton">增加</button>
+    <button id="esc">取消</button>
+</div>
+<script src="/js/jquery.min1.js"></script>
+<script>
+
+    $(function () {
+        init()
+    })
+
+    function init() {
+        $.ajax({
+            url:"/getLibrary",
+            type:"get",
+            data:{
+                bookName:$("#bookName").val(),
+                bookAuthor:$("#bookAuthor").val(),
+                publisher:$("#publisher").val(),
+                bookPrice:$("#bookPrice").val(),
+                lendingTime:$("#lendingTime").val(),
+                returnTime:$("#returnTime").val(),
+                state:$("#state").val(),
+            },
+            success:function (data) {
+                for (var i of data){
+                    $("#table").append(' <tr><td>' + i.bookName + '</td>' +
+                        '<td>' + i.bookAuthor + '</td>' + '<td>' + i.publisher + '</td>' +
+                        '' + '<td>'+ i.bookPrice + '</td>' + '<td>' + i.lendingTime + '</td>' + '<td>' + i.returnTime + '</td>' + '<td>' + i.state + '</td>' +
+                        '<td><button onclick="edit(\'' + i.id + '\')">编辑</button><button onclick="del(\'' + i.id + '\')">删除</button></td></tr>')
+                }
+            }
+        })
+    }
+
+    $("#but").click(function(){
+        $("#insertLibrary").show();
+    })
+
+    $("#esc").click(function(){
+        $("#insertLibrary").hide();
+    })
+
+    $("#back").click(function () {
+        location.href = "/home"
+    })
+
+    $("#logout").click(function () {
+        var r = confirm("确定注销此账号吗？");
+        if (r == true) {
+            location.href = "/index"
+        }
+    })
+
+    $("#ton").click(function () {
+        $.ajax({
+            url:"/insertLibrary",
+            type:"post",
+            data:{
+                bookName:$("#insertBookName").val(),
+                bookAuthor:$("#insertBookAuthor").val(),
+                publisher:$("#insertPublisher").val(),
+                bookPrice:$("#insertBookPrice").val(),
+                lendingTime:$("#insertLendingTime").val(),
+                returnTime:$("#insertReturnTime").val(),
+                state:$("#insertState").val(),
+            },
+            success:function (data) {
+                if (data == "该书已成功入库!") {
+                    alert(data)
+                    $("#table").html('<thead>\n' +
+                        '                <tr>\n' +
+                        '                    <th data-field="bookName" id="bookName">书籍名称</th>\n' +
+                        '                    <th data-field="bookAuthor" id="bookAuthor">书籍作者</th>\n' +
+                        '                    <th data-field="publisher" id="publisher">书籍出版社</th>\n' +
+                        '                    <th data-field="bookPrice" id="bookPrice">书籍名称</th>\n' +
+                        '                    <th data-field="lendingTime" id="lendingTime">上次借书时间</th>\n' +
+                        '                    <th data-field="returnTime" id="returnTime">上次归还时间</th>\n' +
+                        '                    <th data-field="state" id="state">上次归还时间</th>\n' +
+                        '                    <th data-field="id" id="id">操作</th>\n' +
+                        '                </tr>\n' +
+                        '            </thead>')
+                    init()
+                    $("#insertLibrary").hide();
+                }else {
+                    alert(data)
+                }
+            }
+        })
+    })
+
+    function del(id) {
+        var r = confirm("确定要删除此信息吗？")
+            if (r == true){
+                $.ajax({
+                    url:"/delLibrary",
+                    type:"post",
+                    data:{
+                        id:id
+                    },
+                    success:function (data) {
+                        if (data == "该书已成功从库中删除!") {
+                            alert(data)
+                            $("#table").html('<thead>\n' +
+                                '                <tr>\n' +
+                                '                    <th data-field="bookName" id="bookName">书籍名称</th>\n' +
+                                '                    <th data-field="bookAuthor" id="bookAuthor">书籍作者</th>\n' +
+                                '                    <th data-field="publisher" id="publisher">书籍出版社</th>\n' +
+                                '                    <th data-field="bookPrice" id="bookPrice">书籍名称</th>\n' +
+                                '                    <th data-field="lendingTime" id="lendingTime">上次借书时间</th>\n' +
+                                '                    <th data-field="returnTime" id="returnTime">上次归还时间</th>\n' +
+                                '                    <th data-field="state" id="state">上次归还时间</th>\n' +
+                                '                    <th data-field="id" id="id">操作</th>\n' +
+                                '                </tr>\n' +
+                                '            </thead>')
+                            init()
+                        }
+                    }
+                })
+            }
+        }
+
+        function edit(id) {
+            location.href="/editLibrary?id=" + id
+        }
+</script>
+</html>

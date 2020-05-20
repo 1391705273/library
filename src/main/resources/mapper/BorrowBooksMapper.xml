@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.BorrowBooksMapper">
+    <resultMap id="borrowBooksMap" type="com.example.demo.entity.BorrowBooks">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="sex" column="sex"/>
+        <result property="age" column="age"/>
+        <result property="bookName" column="book_name"/>
+        <result property="bookAuthor" column="book_author"/>
+        <result property="lendingTime" column="lending_time"/>
+        <result property="returnTime" column="return_time"/>
+    </resultMap>
+
+    <!--  新增借书日记  -->
+    <insert id="insertBorrowBooks">
+        insert  into borrow_books (`name`,sex,age,book_name,book_author,lending_time,return_time)
+        values (#{name},#{sex},#{age},#{bookName},#{bookAuthor},#{lendingTime},#{returnTime})
+    </insert>
+
+    <!--  删除借书日记  -->
+    <delete id="delBorrowBooks">
+        delete from borrow_books where id = #{id}
+    </delete>
+
+    <!--  修改借书日记  -->
+    <update id="updateBorrowBooks">
+        update borrow_books
+        <set>
+            <if test="name != null and name != ''">
+                `name` = #{name}
+            </if>,
+            <if test="sex != null and sex != ''">
+                sex = #{sex}
+            </if>,
+            <if test="age != null and age != ''">
+                age = #{age}
+            </if>,
+            <if test="bookName != null and bookName != ''">
+                book_name = #{bookName}
+            </if>,
+            <if test="bookAuthor != null and bookAuthor != ''">
+                book_author = #{bookAuthor}
+            </if>,
+            <if test="lendingTime != null">
+                lending_time = #{lendingTime}
+            </if>,
+            <if test="returnTime != null">
+                return_time = #{returnTime}
+            </if>
+        </set>
+        where  id = #{id}
+    </update>
+
+    <!--  查询所有借书记录  -->
+    <select id="getBorrowBooks" resultMap="borrowBooksMap">
+        select * from borrow_books
+    </select>
+
+    <!--  查询书籍名称  -->
+    <select id="getBorrowBooksName" resultMap="borrowBooksMap">
+        select * from borrow_books where book_name = #{bookNme}
+    </select>
+
+    <!--  归还书籍后删除借书记录  -->
+    <delete id="delState">
+        delete from borrow_books where book_name=#{bookNme}
+    </delete>
+</mapper>

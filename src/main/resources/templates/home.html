@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>首页</title>
+</head>
+<style>
+    .website{
+        position:absolute;
+        left:550px;
+        top:200px;
+        font-size:35px
+    }
+    .hygl{
+        position:absolute;
+        left:525px;
+        top:100px;
+        font-size:35px;
+        color: #e83e8c;
+    }
+    #logout{
+        position:absolute;
+        left:1100px;
+    }
+</style>
+<body>
+    <button id="logout">注销</button>
+    <h2 class="hygl">欢迎光临此系统!!</h2>
+    <ul class="website">
+        <li>
+            <a href="/library">书籍库</a>
+        </li>
+        <li>
+            <a href="/borrowBooks">借书记录</a>
+        </li>
+    </ul>
+</body>
+<script src="/js/jquery.min1.js"></script>
+<script>
+    $("#logout").click(function () {
+        var r = confirm("确定注销此账号吗？");
+        if (r == true) {
+            location.href = "/index"
+        }
+    })
+</script>
+</html>

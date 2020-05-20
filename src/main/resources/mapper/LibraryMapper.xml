@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.LibraryMapper">
+    <resultMap id="libraryMap" type="com.example.demo.entity.Library">
+        <id property="id" column="id"/>
+        <result property="bookName" column="book_name"/>
+        <result property="bookAuthor" column="book_author"/>
+        <result property="publisher" column="publisher"/>
+        <result property="bookPrice" column="book_price"/>
+        <result property="lendingTime" column="lending_time"/>
+        <result property="returnTime" column="return_time"/>
+        <result property="state" column="state"/>
+    </resultMap>
+
+    <!--  新增书籍  -->
+    <insert id="insertLibrary">
+        insert into library (book_name,book_author,publisher,book_price,lending_time,return_time,state)
+        values (#{bookName},#{bookAuthor},#{publisher},#{bookPrice},#{lendingTime},#{returnTime},#{state})
+    </insert>
+
+    <!--  删除书籍  -->
+    <delete id="delLibrary">
+        delete from library where id = #{id}
+    </delete>
+
+    <!--  更新书籍信息  -->
+    <update id="updateLibrary">
+        update library
+        <set>
+            <if test="bookName != null and bookName != ''">
+                book_name = #{bookName}
+            </if>,
+            <if test="bookAuthor != null and bookAuthor != ''">
+                 book_author = #{bookAuthor}
+            </if>,
+            <if test="publisher != null and publisher != ''">
+                 publisher = #{publisher}
+            </if>,
+            <if test="bookPrice != null and bookPrice != ''">
+                  book_price = #{bookPrice}
+            </if>,
+            <if test="lendingTime != null">
+                  lending_time = #{lendingTime}
+            </if>,
+            <if test="returnTime != null">
+                 return_time = #{returnTime}
+            </if>,
+            <if test="returnTime != null">
+                 state = #{state}
+            </if>
+        </set>
+        where  id = #{id}
+    </update>
+
+    <!--  查询所有书籍信息  -->
+    <select id="getLibrary" resultMap="libraryMap">
+        select * from library
+    </select>
+
+    <!--  根据书籍id查询该书信息  -->
+    <select id="getLibraryId" resultMap="libraryMap">
+        select * from library where id=#{id}
+    </select>
+
+    <!--  根据书籍bookName修改书籍状态  已借出状态 -->
+    <update id="updateState">
+        update library set state= '已借出' where book_name = #{bookName}
+    </update>
+
+    <!--  根据书籍bookName修改书籍状态  可借出状态  -->
+    <update id="updateByState">
+        update library set state= '可借出' where book_name = #{bookName}
+    </update>
+
+    <!--  查询书籍名称  -->
+    <select id="getName" resultMap="libraryMap">
+        select * from library where book_name=#{bookName}
+     </select>
+
+    <!--  查询书籍不为已借出的  -->
+    <select id="getState" resultMap="libraryMap">
+        select * from library where state != '已借出'
+    </select>
+</mapper>

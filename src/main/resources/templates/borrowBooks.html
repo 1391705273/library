@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>借书系统</title>
+</head>
+<style>
+    #tbody{
+        position:absolute;
+        left:385px;
+        top:150px;
+    }
+
+    #back{
+        position:absolute;
+        left:385px;
+        top:128px;
+    }
+
+    #insertBorrowBooks{
+        position:absolute;
+        left:200px;
+        top:45px;
+    }
+
+    #logout{
+        position:absolute;
+        left:1100px;
+    }
+</style>
+<button id="back">返回</button>
+<button id="logout">注销</button>
+<body>
+<div id="tbody">
+    <button id="but">新增借书记录</button>
+    <table id="table" border="1">
+        <thead>
+        <tr>
+            <th data-field="name" id="name">借书人姓名</th>
+            <th data-field="sex" id="sex">性别</th>
+            <th data-field="age" id="age">年龄</th>
+            <th data-field="bookName" id="bookName">书籍名称</th>
+            <th data-field="bookAuthor" id="bookAuthor">书籍作者</th>
+            <th data-field="lendingTime" id="lendingTime">借书时间</th>
+            <th data-field="returnTime" id="returnTime">大约归还时间</th>
+            <th data-field="id" id="id">操作</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+<div id="insertBorrowBooks" style="display: none;">
+    借书人姓名:<input id="insertName" type="text">
+    性别:<select id="insertSex">
+            <option>男</option>
+            <option>女</option>
+            <option>黄雨晴</option>
+        </select>
+    年龄:<input id="insertAge" type="number" min="10" max="100">
+    书籍名称:<input id="insertBookName" type="text">
+    书籍作者:<input id="insertBookAuthor" type="text">
+    借书时间:<input id="insertLendingTime" type="date">
+    大约还书时间:<input id="insertReturnTime" type="date">
+    <button type="submit" id="ton">增加</button>
+    <button id="esc">取消</button>
+</div>
+</body>
+<script src="/js/jquery.min1.js"></script>
+<script>
+    $(function () {
+        init()
+    })
+
+    function init () {
+        $.ajax({
+            url:"/getBorrowBooks",
+            type:"get",
+            data:{
+                name:$("#name").val(),
+                sex:$("#sex").val(),
+                age:$("#age").val(),
+                bookName:$("#bookName").val(),
+                bookAuthor:$("#bookAuthor").val(),
+                lendingTime:$("#lendingTime").val(),
+                returnTime:$("#returnTime").val(),
+            },
+            success:function (data) {
+                for (var i of data){
+                    $("#table").append(' <tr><td>' + i.name + '</td>' +
+                        '<td>' + i.sex + '</td>' + '<td>' + i.age + '</td>' +
+                        '' + '<td>'+ i.bookName + '</td>' + '<td>' + i.bookAuthor + '</td>' + '<td>' + i.lendingTime + '</td>' + '<td>' + i.returnTime + '</td>' +
+                        '<td><button onclick="ret(\'' + i.bookName + '\')">归还</button><button onclick="edit(\'' + i.id + '\')">编辑</button><button onclick="del(\'' + i.id + '\')">删除</button></td></tr>')
+                }
+            }
+        })
+    }
+
+    $("#but").click(function(){
+        $("#insertBorrowBooks").show();
+    })
+
+    $("#esc").click(function(){
+        $("#insertBorrowBooks").hide();
+    })
+
+    $("#back").click(function () {
+        location.href = "/home"
+    })
+
+    $("#logout").click(function () {
+        var r = confirm("确定注销此账号吗？");
+        if (r == true) {
+            location.href = "/index"
+        }
+    })
+
+    $("#ton").click(function () {
+        $.ajax({
+            url:"/insertBorrowBooks",
+            type:"post",
+            data:{
+                name:$("#insertName").val(),
+                sex:$("#insertSex").val(),
+                age:$("#insertAge").val(),
+                bookName:$("#insertBookName").val(),
+                bookAuthor:$("#insertBookAuthor").val(),
+                lendingTime:$("#insertLendingTime").val(),
+                returnTime:$("#insertReturnTime").val(),
+            },
+            success:function (data) {
+                if (data == "成功新增借书记录!") {
+                    alert(data)
+                    $("#table").html('<thead>\n' +
+                        '        <tr>\n' +
+                        '            <th data-field="name" id="name">借书人姓名</th>\n' +
+                        '            <th data-field="sex" id="sex">性别</th>\n' +
+                        '            <th data-field="age" id="age">年龄</th>\n' +
+                        '            <th data-field="bookName" id="bookName">书籍名称</th>\n' +
+                        '            <th data-field="bookAuthor" id="bookAuthor">书籍作者</th>\n' +
+                        '            <th data-field="lendingTime" id="lendingTime">借书时间</th>\n' +
+                        '            <th data-field="returnTime" id="returnTime">大约归还时间</th>\n' +
+                        '            <th data-field="id" id="id">操作</th>\n' +
+                        '        </tr>\n' +
+                        '        </thead>')
+                    init()
+                    $("#insertBorrowBooks").hide();
+                }else {
+                    alert(data)
+                }
+            }
+        })
+    })
+
+    function del(id) {
+        var r = confirm("确定要删除此信息吗？")
+        if (r == true) {
+            $.ajax({
+                url: "/delBorrowBooks", 
+                type: "post",
+                data: {
+                    id: id
+                },
+                success:function (data) {
+                    if (data == "成功删除借书记录!"){
+                        alert(data)
+                        $("#table").html('<thead>\n' +
+                            '        <tr>\n' +
+                            '            <th data-field="name" id="name">借书人姓名</th>\n' +
+                            '            <th data-field="sex" id="sex">性别</th>\n' +
+                            '            <th data-field="age" id="age">年龄</th>\n' +
+                            '            <th data-field="bookName" id="bookName">书籍名称</th>\n' +
+                            '            <th data-field="bookAuthor" id="bookAuthor">书籍作者</th>\n' +
+                            '            <th data-field="lendingTime" id="lendingTime">借书时间</th>\n' +
+                            '            <th data-field="returnTime" id="returnTime">大约归还时间</th>\n' +
+                            '            <th data-field="id" id="id">操作</th>\n' +
+                            '        </tr>\n' +
+                            '        </thead>')
+                        init()
+                    }
+                }
+            })
+        }
+    }
+    function edit(id) {
+        location.href="/editBorrowBooks?id=" + id
+    }
+
+    function ret(bookName) {
+        var r = confirm("确定要归还该书吗？")
+        if (r == true) {
+            $.ajax({
+                url:"/updateByState",
+                type:"post",
+                data:{
+                    bookName:bookName,
+                },
+                success:function (data) {
+                    if (data == "书籍已成功归还!") {
+                        alert(data)
+                        $("#table").html('<thead>\n' +
+                            '        <tr>\n' +
+                            '            <th data-field="name" id="name">借书人姓名</th>\n' +
+                            '            <th data-field="sex" id="sex">性别</th>\n' +
+                            '            <th data-field="age" id="age">年龄</th>\n' +
+                            '            <th data-field="bookName" id="bookName">书籍名称</th>\n' +
+                            '            <th data-field="bookAuthor" id="bookAuthor">书籍作者</th>\n' +
+                            '            <th data-field="lendingTime" id="lendingTime">借书时间</th>\n' +
+                            '            <th data-field="returnTime" id="returnTime">大约归还时间</th>\n' +
+                            '            <th data-field="id" id="id">操作</th>\n' +
+                            '        </tr>\n' +
+                            '        </thead>')
+                        init()
+                    }
+                }
+            })
+        }
+    }
+</script>
+</html>
