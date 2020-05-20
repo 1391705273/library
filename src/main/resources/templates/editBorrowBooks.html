@@ -4,8 +4,136 @@
     <meta charset="UTF-8"/>
     <title>编辑借书记录</title>
 </head>
-<body>
+<style>
+    #back{
+        position:absolute;
+        left:525px;
+        top:75px;
+    }
 
+    #tbody{
+        position:absolute;
+        left:525px;
+        top:100px;
+    }
+
+    #ton {
+        position:absolute;
+        left:105px;
+        top:175px;
+    }
+
+    #logout{
+        position:absolute;
+        left:1100px;
+    }
+</style>
+<body>
+<button id="logout">注销</button>
+<button id="back">返回</button>
+<div id="tbody">
+    <form id="myForm">
+        <div class="form-group">
+            借书人姓名:<input type="text" id="name" name="name">
+        </div>
+        <div class="form-group">
+            性别:<select id="sex">
+                <option>男</option>
+                <option>女</option>
+                <option>黄雨晴</option>
+            </select>
+        </div>
+        <div class="form-group">
+            年龄:<input type="number" id="age" name="age" max="85" min="10">
+        </div>
+        <div class="form-group">
+            书籍名称:<input type="text" id="bookName" name="bookName">
+        </div>
+        <div class="form-group">
+            书籍作者:<input type="text" id="bookAuthor" name="bookAuthor">
+        </div>
+        <div class="form-group">
+            上次借书时间:<input type="date" id="lendingTime" name="lendingTime">
+        </div>
+        <div class="form-group">
+            上次还书时间:<input type="date" id="returnTime" name="returnTime">
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-primary mb-2" id="ton">信息更新</button>
+        </div>
+    </form>
+</div>
 </body>
 <script src="/js/jquery.min1.js"></script>
+<script>
+    $(function () {
+        $.ajax({
+            url:"getBorrowBooksId",
+            type:"get",
+            data:{
+                id: getQueryVariable("id")
+            },
+            success:function (res) {
+                var data = res[0]
+                $("#name").val(data.name);
+                $("#sex").val(data.sex);
+                $("#age").val(data.age);
+                $("#bookName").val(data.bookName);
+                $("#bookAuthor").val(data.bookAuthor);
+                $("#lendingTime").val(data.lendingTime);
+                $("#returnTime").val(data.returnTime);
+            }
+        })
+    })
+
+    function getQueryVariable(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+
+    $("#back").click(function () {
+        location.href = "/borrowBooks"
+    })
+
+    $("#logout").click(function () {
+        var r = confirm("确定注销此账号吗？");
+        if (r == true) {
+            location.href = "/index"
+        }
+    })
+
+    $("#ton").click(function () {
+        var r = confirm("确定更新这个商品的数据吗？");
+        if (r == true) {
+        $.ajax({
+            url:"updateBorrowBooks",
+            type:"post",
+            data:{
+                id:getQueryVariable("id"),
+                name:$("#name").val(),
+                sex:$("#sex").val(),
+                age:$("#age").val(),
+                bookName:$("#bookName").val(),
+                bookAuthor:$("#bookAuthor").val(),
+                lendingTime:$("#lendingTime").val(),
+                returnTime:$("#returnTime").val(),
+            },
+            success:function (data) {
+                if (data == "成功修改借书记录信息!"){
+                    alert(data)
+                    location.href="/borrowBooks"
+                }else {
+                    alert(data)
+                    }
+                }
+            })
+        }
+    })
+</script>
 </html>

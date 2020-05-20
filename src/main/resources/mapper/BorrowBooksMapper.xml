@@ -67,4 +67,9 @@
     <delete id="delState">
         delete from borrow_books where book_name=#{bookNme}
     </delete>
+
+    <!--  根据id查询信息  -->
+    <select id="getBorrowBooksId" resultMap="borrowBooksMap">
+        select * from borrow_books where id=#{id}
+    </select>
 </mapper>

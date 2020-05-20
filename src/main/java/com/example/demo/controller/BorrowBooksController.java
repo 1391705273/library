@@ -99,4 +99,15 @@ public class BorrowBooksController {
     public Integer delState(String BookName){
         return borrowBooksService.delState(BookName);
     }
+
+    /**
+     * 根据id查询借书信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/getBorrowBooksId")
+    @ResponseBody
+    public List<BorrowBooks> getBorrowBooksId(Integer id){
+        return borrowBooksService.getBorrowBooksId(id);
+    }
 }

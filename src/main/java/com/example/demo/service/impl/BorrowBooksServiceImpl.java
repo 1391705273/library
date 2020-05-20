@@ -78,4 +78,14 @@ public class BorrowBooksServiceImpl implements BorrowBooksService {
     public Integer delState(String BookName) {
         return borrowBooksMapper.delState(BookName);
     }
+
+    /**
+     * 根据id查询借书记录
+     * @param id
+     * @return
+     */
+    @Override
+    public List<BorrowBooks> getBorrowBooksId(Integer id) {
+        return borrowBooksMapper.getBorrowBooksId(id);
+    }
 }

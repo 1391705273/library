@@ -24,4 +24,7 @@ public interface BorrowBooksService {
 
     //归还书籍后删除借书记录
     Integer delState(String BookName);
+
+    // 根据id查询借书信息
+    List<BorrowBooks> getBorrowBooksId(Integer id);
 }
