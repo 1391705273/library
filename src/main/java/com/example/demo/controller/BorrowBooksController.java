@@ -20,24 +20,27 @@ public class BorrowBooksController {
 
     /**
      * 借书记录
+     *
      * @return
      */
     @GetMapping("/borrowBooks")
-    public String borrowBooks(){
+    public String borrowBooks() {
         return "borrowBooks";
     }
 
     /**
      * 编辑借书记录
+     *
      * @return
      */
     @GetMapping("/editBorrowBooks")
-    public String editBorrowBooks(){
+    public String editBorrowBooks() {
         return "editBorrowBooks";
     }
 
     /**
      * 插入借书日志
+     *
      * @param borrowBooks
      * @return
      */
@@ -49,6 +52,7 @@ public class BorrowBooksController {
 
     /**
      * 删除借书日志
+     *
      * @param id
      * @return
      */
@@ -60,6 +64,7 @@ public class BorrowBooksController {
 
     /**
      * 修改借书日志
+     *
      * @param borrowBooks
      * @return
      */
@@ -71,6 +76,7 @@ public class BorrowBooksController {
 
     /**
      * 查询所有借书日志
+     *
      * @return
      */
     @ResponseBody
@@ -81,33 +87,36 @@ public class BorrowBooksController {
 
     /**
      * 查询书籍名称
+     *
      * @return
      */
     @ResponseBody
     @GetMapping("/getBorrowBooksName")
-    public  BorrowBooks getBorrowBooksName(String BookName) {
+    public BorrowBooks getBorrowBooksName(String BookName) {
         return borrowBooksService.getBorrowBooksName(BookName);
     }
 
     /**
      * 归还书籍后删除借书记录
+     *
      * @param BookName
      * @return
      */
     @PostMapping("/delState")
     @ResponseBody
-    public Integer delState(String BookName){
+    public Integer delState(String BookName) {
         return borrowBooksService.delState(BookName);
     }
 
     /**
      * 根据id查询借书信息
+     *
      * @param id
      * @return
      */
     @GetMapping("/getBorrowBooksId")
     @ResponseBody
-    public List<BorrowBooks> getBorrowBooksId(Integer id){
+    public List<BorrowBooks> getBorrowBooksId(Integer id) {
         return borrowBooksService.getBorrowBooksId(id);
     }
 }
